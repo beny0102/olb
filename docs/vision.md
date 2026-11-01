@@ -198,7 +198,7 @@ This is the core of the project. Everything else is replaceable.
 | `F` | Foul | `X` | In play |
 | `P` | Pitchout | `Q` | Swinging on pitchout |
 
-Pickoff throws (`1`–`9`) and runner-going markers (`>`) are represented as `runner` events instead, to keep the pitch event atomic. The full code table lives in `packages/schema`, not in this document, so there is exactly one authority.
+Pickoff throws (`1`–`9`) and runner-going markers (`>`) are represented as `runner` events instead, to keep the pitch event atomic. The full code table lives in `olb-contract`, not in this document, so there is exactly one authority.
 
 ### 5.5 Batted-ball payload
 
@@ -531,7 +531,7 @@ The web app can additionally be deployed to Cloudflare Workers, which is how the
 
 | Phase | Work | Exit criterion | Est. |
 | --- | --- | --- | --- |
-| **0 · Foundations** | Contract v1 + codegen (TS/Python), monorepo (pnpm + Turborepo), compose profiles, CI, ADRs 0001–0006 | One schema source compiles to both languages; CI green; `basic` profile boots | 2 wk |
+| **0 · Foundations** | Contract v1 + codegen (TS/Python) in `olb-contract`, seven repositories scaffolded, compose profiles, CI, ADRs 0001–0007 | One schema source compiles to both languages; CI green; `basic` profile boots | 2 wk |
 | **1 · Scorekeeping** | ERP, scorer PWA (offline-first), state machine + fold tests, WS gateway, 2.5D viewer, demo seed | A seeded 9-inning game is scored end to end from a phone, synced offline, and followed live by a second device | 6–8 wk |
 | **2 · Simulation + 3D** | Godot headless sim with ground truth, R3F viewer, replay, clips | A synthetic game renders with true 3D trajectories, reproducible from a seed | 4 wk |
 | **3 · Pitch vision** | Calibration CLI, single/dual camera pitch tracking, proposal inbox | Plate location within a published tolerance on a physical field; calibration reproducible by a second person from docs alone | 8–12 wk |
@@ -578,7 +578,7 @@ Architecture Decision Records in `docs/adr/`, one per irreversible or expensive-
 | ADR | Subject | Status |
 | --- | --- | --- |
 | [0001](adr/0001-cloudflare-deployment.md) | Frontend deployment target (Cloudflare Workers via OpenNext) | Accepted |
-| 0002 | Monorepo structure and toolchain | Planned |
+| [0002](adr/0002-repository-topology.md) | Repository topology: polyrepo with a published contract | Accepted |
 | 0003 | Canonical data contract and versioning | Planned |
 | 0004 | Realtime transport and envelope | Planned |
 | 0005 | Deployment profiles and support matrix | Planned |

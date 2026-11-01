@@ -61,6 +61,22 @@ The contract in the middle is the project. Layers can be replaced — a differen
 
 **Scorekeeping first.** The product is useful with zero cameras and zero machine learning. Vision is an accelerator bolted onto a working system, never a precondition for one.
 
+## Repositories
+
+The project is a set of independent repositories joined by a published contract, not a monorepo ([ADR 0002](docs/adr/0002-repository-topology.md)). Each one can be built, versioned and deployed on its own.
+
+| Repository | Responsibility | Stack |
+| --- | --- | --- |
+| [`olb`](https://github.com/beny0102/olb) | Whitepaper, ADRs, compose profiles, acceptance suite | Docs, Docker |
+| `olb-contract` | Canonical schema, codegen, conformance fixtures | JSON Schema → TS + Python |
+| `olb-api` | League ERP, game state machine, realtime gateway | NestJS, Postgres, Redis |
+| `olb-web` | Public viewer and league pages | Next.js, React Three Fiber |
+| `olb-scorer` | Scorekeeper PWA, offline-first | Next.js, IndexedDB |
+| `olb-vision` | Calibration CLI and pitch tracking | Python, OpenCV, YOLO |
+| `olb-sim` | Synthetic games with ground truth | Godot 4 headless |
+
+Only `olb` exists today. The rest are created as Phase 0 work; links go live as each repository is published.
+
 ## What works without cameras
 
 | Capability | `basic` | `demo` | `vision` |
@@ -103,7 +119,7 @@ docker compose --profile sim   up -d    # + Godot headless simulator
 
 | Phase | Deliverable | Exit criterion |
 | --- | --- | --- |
-| **0 · Foundations** | Data contract v1, monorepo, compose profiles, CI, ADRs | Contract compiles to TypeScript and Python from one source; CI green |
+| **0 · Foundations** | Data contract v1, repository topology, compose profiles, CI, ADRs | Contract compiles to TypeScript and Python from one source; CI green |
 | **1 · Scorekeeping** | League ERP, scorer PWA (offline-first), game state machine, live gateway, 2.5D viewer | A seeded 9-inning game is scored end to end and followed live on a phone |
 | **2 · Simulation and 3D** | Godot headless simulator with ground truth, R3F 3D viewer, replay | A synthetic game renders with true 3D trajectories, reproducible from a seed |
 | **3 · Pitch vision** | Calibration CLI, single/dual camera pitch tracking | Plate location within a stated tolerance on a physical field |

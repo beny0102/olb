@@ -12,7 +12,7 @@ Open League Baseball has two deployment audiences that pull in opposite directio
 1. **A league running its own instance.** The project's core promise (design principle P5, *boring technology*) is that a volunteer administrator can run the whole stack from a compose file on a mini-PC. That includes the API, Postgres, Redis and the WebSocket gateway.
 2. **Anyone evaluating the project.** A portfolio-grade demo must load instantly, globally, with no install. Asking a reviewer to boot Postgres is asking them not to look.
 
-The fan viewer (`apps/web`) is the public face of both. It is mostly client-side WebGL with a handful of server-rendered, cacheable pages: league, season, team, game, box score. It needs cheap global hosting and predictable cost, not a long-lived stateful server.
+The fan viewer (`olb-web`) is the public face of both. It is mostly client-side WebGL with a handful of server-rendered, cacheable pages: league, season, team, game, box score. It needs cheap global hosting and predictable cost, not a long-lived stateful server.
 
 Three constraints discovered while evaluating Cloudflare:
 
@@ -24,10 +24,10 @@ Three constraints discovered while evaluating Cloudflare:
 
 **Split the deployment surface. Do not move the core.**
 
-1. `apps/web` — Next.js 16 (App Router) deployed to **Cloudflare Workers** with `@opennextjs/cloudflare` (Node runtime, not Edge).
+1. `olb-web` — Next.js 16 (App Router) deployed to **Cloudflare Workers** with `@opennextjs/cloudflare` (Node runtime, not Edge).
    - Game, team, season and box-score pages are **statically generated** (SSG) so the Worker bundle stays small and pages are cacheable at the edge.
    - The 3D viewer is mounted as a **client-only island** (`dynamic(..., { ssr: false })`). Three.js and React Three Fiber never enter the SSR bundle.
-2. `apps/api` and the realtime gateway — **self-hosted**, Node + Docker Compose, as specified in §11. The public frontend connects over WSS to the self-hosted API.
+2. `olb-api` and the realtime gateway — **self-hosted**, Node + Docker Compose, as specified in §11. The public frontend connects over WSS to the self-hosted API.
 3. **Demo build** — a separate static export with no backend: a recorded event log replayed client-side by the same viewer renderer used for live games (§8.1). This is the portfolio artifact.
 4. **Not adopted at this stage:** D1, Durable Objects, `@cloudflare/next-on-pages` (deprecated in favour of the OpenNext adapter), full Pages Router/Edge runtime deployment.
 
