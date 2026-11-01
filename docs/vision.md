@@ -523,6 +523,10 @@ Video dominates by two orders of magnitude. This is why retention is a product d
 
 A volunteer league administrator is not a sysadmin. Therefore: a documented single-command install, a health endpoint that says what is misconfigured in plain language, automatic TLS via a reverse proxy profile, and an upgrade path that states explicitly which versions can skip which releases.
 
+### 11.6 Hosted frontend (optional)
+
+The web app can additionally be deployed to Cloudflare Workers, which is how the public demo is published. This is a hosting option for the frontend only: the API, Postgres, Redis and the realtime gateway remain self-hosted, because Workers cannot provide a stateful WebSocket gateway or PostgreSQL. The demo build runs with no backend at all, replaying a recorded event log client-side. See [ADR 0001](adr/0001-cloudflare-deployment.md).
+
 ## 12. Roadmap and exit criteria
 
 | Phase | Work | Exit criterion | Est. |
@@ -555,14 +559,15 @@ Phase 1's exit criterion replaces the usual "a league uses it", because there is
 
 Deliberately unresolved; each becomes an ADR when decided.
 
-1. **Scorer UI framework.** SvelteKit (small bundles, strong offline story) vs Next.js (shared tooling with the viewer). Leaning SvelteKit.
-2. **Auth.** Local accounts with OIDC federation, or OIDC-only? Leagues may not have an identity provider.
-3. **Softball.** Same engine, different ball and field dimensions. The contract supports it; the question is whether v1 claims it.
-4. **Rule variants.** Mercy rule, DH/EP, courtesy runners, tiebreakers: which set ships as first-class configuration in Phase 1?
-5. **Stats definitions.** Follow an existing public specification exactly (and which), or publish our own with citations?
-6. **Highlight clips.** Deferred, but the event log already makes them cheap later. Does the video pipeline preserve enough context to cut them without re-processing?
-7. **Public data export.** A season should be exportable as Retrosheet event files. Is that v1 or v2?
-8. **Predictive pitch rendering.** Section 8.2, option 2. Product decision, not a technical one.
+*Resolved:* frontend framework and hosting — Next.js 16 on Cloudflare Workers via OpenNext, API self-hosted. See [ADR 0001](adr/0001-cloudflare-deployment.md).
+
+1. **Auth.** Local accounts with OIDC federation, or OIDC-only? Leagues may not have an identity provider.
+2. **Softball.** Same engine, different ball and field dimensions. The contract supports it; the question is whether v1 claims it.
+3. **Rule variants.** Mercy rule, DH/EP, courtesy runners, tiebreakers: which set ships as first-class configuration in Phase 1?
+4. **Stats definitions.** Follow an existing public specification exactly (and which), or publish our own with citations?
+5. **Highlight clips.** Deferred, but the event log already makes them cheap later. Does the video pipeline preserve enough context to cut them without re-processing?
+6. **Public data export.** A season should be exportable as Retrosheet event files. Is that v1 or v2?
+7. **Predictive pitch rendering.** Section 8.2, option 2. Product decision, not a technical one.
 
 ## 15. Governance
 
@@ -570,14 +575,15 @@ Deliberately unresolved; each becomes an ADR when decided.
 
 Architecture Decision Records in `docs/adr/`, one per irreversible or expensive-to-reverse choice:
 
-| ADR | Subject |
-| --- | --- |
-| 0001 | Monorepo structure and toolchain |
-| 0002 | Canonical data contract and versioning |
-| 0003 | Realtime transport and envelope |
-| 0004 | Deployment profiles and support matrix |
-| 0005 | Licensing and contribution model (Apache-2.0 + DCO) |
-| 0006 | Capture abstraction and human-in-the-loop authority |
+| ADR | Subject | Status |
+| --- | --- | --- |
+| [0001](adr/0001-cloudflare-deployment.md) | Frontend deployment target (Cloudflare Workers via OpenNext) | Accepted |
+| 0002 | Monorepo structure and toolchain | Planned |
+| 0003 | Canonical data contract and versioning | Planned |
+| 0004 | Realtime transport and envelope | Planned |
+| 0005 | Deployment profiles and support matrix | Planned |
+| 0006 | Licensing and contribution model (Apache-2.0 + DCO) | Planned |
+| 0007 | Capture abstraction and human-in-the-loop authority | Planned |
 
 ### 15.2 Contract compatibility
 
