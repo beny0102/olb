@@ -70,12 +70,12 @@ The project is a set of independent repositories joined by a published contract,
 | [`olb`](https://github.com/beny0102/olb) | Whitepaper, ADRs, compose profiles, acceptance suite | Docs, Docker |
 | [`olb-contract`](https://github.com/beny0102/olb-contract) | Canonical schema, codegen, conformance fixtures | JSON Schema → TS + Python |
 | [`olb-api`](https://github.com/beny0102/olb-api) | League ERP, game state machine, realtime gateway | NestJS, Postgres, Redis |
-| `olb-web` | Public viewer and league pages | Next.js, React Three Fiber |
+| [`olb-web`](https://github.com/beny0102/olb-web) | Public viewer and league pages | Next.js, React Three Fiber |
 | `olb-scorer` | Scorekeeper PWA, offline-first | Next.js, IndexedDB |
 | `olb-vision` | Calibration CLI and pitch tracking | Python, OpenCV, YOLO |
 | `olb-sim` | Synthetic games with ground truth | Godot 4 headless |
 
-`olb`, `olb-contract` (v0.1.0) and `olb-api` (v0.1.0, pre-alpha) exist today. The rest are created as Phase 0 work; links go live as each repository is published.
+`olb`, `olb-contract` (v0.1.0), `olb-api` (v0.1.0, pre-alpha) and `olb-web` (v0.1.0, pre-alpha) exist today. The rest are created as Phase 0 work; links go live as each repository is published.
 
 ## What works without cameras
 
