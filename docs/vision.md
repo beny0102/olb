@@ -541,6 +541,8 @@ Phase 1's exit criterion replaces the usual "a league uses it", because there is
 
 **Definition of done, every phase:** contract unchanged or explicitly versioned, tests for the new fold logic, docs updated, `basic` profile still boots, no feature that only works with a GPU.
 
+> The order actually followed differs from this table: the compatibility surface (contract, API, viewer, portal) was built before the league ERP. See [ADR 0003](adr/0003-build-order.md).
+
 ## 13. Risks
 
 | Risk | Impact | Mitigation |
@@ -579,11 +581,12 @@ Architecture Decision Records in `docs/adr/`, one per irreversible or expensive-
 | --- | --- | --- |
 | [0001](adr/0001-cloudflare-deployment.md) | Frontend deployment target (Cloudflare Workers via OpenNext) | Accepted |
 | [0002](adr/0002-repository-topology.md) | Repository topology: polyrepo with a published contract | Accepted |
-| 0003 | Canonical data contract and versioning | Planned |
-| 0004 | Realtime transport and envelope | Planned |
-| 0005 | Deployment profiles and support matrix | Planned |
-| 0006 | Licensing and contribution model (Apache-2.0 + DCO) | Planned |
-| 0007 | Capture abstraction and human-in-the-loop authority | Planned |
+| [0003](adr/0003-build-order.md) | Build order: vertical slice before the full league ERP | Accepted |
+| 0004 | Canonical data contract and versioning | Accepted |
+| 0005 | Deployment profiles and support matrix | Accepted |
+| 0006 | Licensing and contribution model (Apache-2.0 + DCO) | Accepted |
+| 0007 | Realtime transport and envelope | Planned |
+| 0008 | Capture abstraction and human-in-the-loop authority | Planned |
 
 ### 15.2 Contract compatibility
 

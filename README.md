@@ -127,6 +127,9 @@ docker compose --profile sim   up -d    # + Godot headless simulator
 
 Each phase must leave the previous one working. There is no "big rewrite" slot in this plan.
 
+> **Deviation on record:** the compatibility surface (contract, API, viewer, portal) was built
+> before the league ERP. The order actually followed, and why, is [ADR 0003](docs/adr/0003-build-order.md).
+
 ## Reference hardware
 
 | Profile | Spec | Approx. cost |
