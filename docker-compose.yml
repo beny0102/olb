@@ -1,0 +1,56 @@
+name: olb
+
+# Phase 0 implements only the `basic` profile. `demo`, `vision`, `sim` and
+# `monitoring` are reserved names — see docs/adr/0005-deployment-profiles.md.
+services:
+  db:
+    image: postgres:16-alpine
+    profiles: ["basic"]
+    environment:
+      POSTGRES_USER: olb
+      POSTGRES_PASSWORD: olb
+      POSTGRES_DB: olb
+    volumes:
+      - olb-pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U olb -d olb"]
+      interval: 5s
+      timeout: 3s
+      retries: 12
+    restart: unless-stopped
+
+  api:
+    build:
+      context: ..
+      dockerfile: olb-api/Dockerfile
+    profiles: ["basic"]
+    environment:
+      DATABASE_URL: postgres://olb:olb@db:5432/olb
+      PORT: "3001"
+      CORS_ORIGIN: http://localhost:3000
+    depends_on:
+      db:
+        condition: service_healthy
+    ports:
+      - "3001:3001"
+    restart: unless-stopped
+
+  web:
+    build:
+      context: ..
+      dockerfile: olb-web/Dockerfile
+      args:
+        NEXT_PUBLIC_API_URL: http://localhost:3001
+    profiles: ["basic"]
+    environment:
+      # Server components reach the API over the compose network.
+      API_URL: http://api:3001
+    depends_on:
+      api:
+        condition: service_healthy
+    ports:
+      - "3000:3000"
+    restart: unless-stopped
+
+volumes:
+  olb-pgdata:
