@@ -107,13 +107,21 @@ Scope discipline is part of the design. These are *non-goals*, not backlog items
 One compose file, four profiles. The point of the DIY story is that a league starts on profile `basic` and never has to migrate away from it.
 
 ```bash
-docker compose --profile basic up -d    # API, Postgres, web. Laptop-class.
-docker compose --profile demo  up -d    # basic + seeded league + looping game
-docker compose --profile vision up -d   # + GPU vision worker + camera ingest
-docker compose --profile sim   up -d    # + Godot headless simulator
+# from this repository, with the four repositories side by side in ~/work/olb
+cp docker/workspace.dockerignore ../.dockerignore
+docker compose --profile basic up -d    # API, Postgres, web. Works today.
 ```
 
-*Planned. Profiles are specified in [docs/vision.md](docs/vision.md#11-deployment-and-hardware); none of these commands work yet.*
+```
+docker compose --profile demo  up -d    # reserved: needs the game domain
+docker compose --profile vision up -d   # reserved: GPU worker + camera ingest
+docker compose --profile sim   up -d    # reserved: Godot headless simulator
+```
+
+`basic` is implemented and boots from `docker-compose.yml`. The other three profiles are reserved
+names documented in [ADR 0005](docs/adr/0005-deployment-profiles.md), not commands that work yet.
+The build context is the parent directory (the API consumes `olb-contract` as a `file:`
+dependency), which is why the workspace ignore file is copied one level up.
 
 ## Roadmap
 

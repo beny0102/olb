@@ -1,0 +1,30 @@
+# Workspace ignore file for builds whose context is ~/work/olb.
+#
+# Docker only reads .dockerignore from the build-context root, and the compose
+# context is the parent directory (the API consumes olb-contract as a `file:`
+# dependency). Copy it once before the first build:
+#
+#     cp docker/workspace.dockerignore ../.dockerignore
+#
+# The per-repository .dockerignore files document the same intent for standalone
+# builds; they are not read when the context is the parent directory.
+
+olb-api/node_modules
+olb-api/dist
+olb-api/.env
+olb-api/*.log
+olb-web/node_modules
+olb-web/.next
+olb-web/out
+olb-web/.env.local
+olb-web/*.log
+olb-web/next-env.d.ts
+olb-web/*.tsbuildinfo
+olb-contract/node_modules
+olb-contract/.venv
+olb-contract/.pytest_cache
+olb-contract/__pycache__
+olb-whitepaper/.git
+olb-api/.git
+olb-web/.git
+olb-contract/.git
