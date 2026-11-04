@@ -1,0 +1,18 @@
+# Local demo override: keep the live preview on :3000/:3001 untouched.
+#
+#   docker compose -p olbdemo -f docker-compose.yml -f docker-compose.demo.yml \
+#     --profile demo up -d --build
+#
+# The web build arg is baked into the client bundle, so it must point at the
+# host port the API is published on, not at the compose-internal name.
+services:
+  api:
+    ports: !override
+      - "3102:3001"
+
+  web:
+    build:
+      args:
+        NEXT_PUBLIC_API_URL: http://localhost:3102
+    ports: !override
+      - "3100:3000"
