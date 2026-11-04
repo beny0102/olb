@@ -28,10 +28,10 @@ does not become the contract.
 Profiles are additive and composable. Starting on `basic` and later adding `vision` must never
 require a data migration or a reinstall — that property is a test, not an aspiration.
 
-**Implementation status:** only `basic` is implemented today. It starts Postgres, the API and the
-web app; Redis appears in the target definition but is not part of the boot profile yet. `demo`,
-`vision`, `sim` and `monitoring` are reserved names: the compose file does not define them, and
-the services they describe do not exist.
+**Implementation status:** `basic` and `demo` are implemented today. `basic` starts Postgres, the
+API and the web app; `demo` adds a one-shot seed service that appends a reproducible nine-inning
+game. Redis appears in the target definition but is not part of the boot profile yet. `vision`,
+`sim` and `monitoring` are reserved names: the compose file does not define their services.
 
 ### Reference builds
 

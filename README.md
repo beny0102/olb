@@ -109,17 +109,20 @@ One compose file, four profiles. The point of the DIY story is that a league sta
 ```bash
 # from this repository, with the four repositories side by side in ~/work/olb
 cp docker/workspace.dockerignore ../.dockerignore
-docker compose --profile basic up -d    # API, Postgres, web. Works today.
+docker compose --profile basic up -d    # API, Postgres, web.
+docker compose --profile demo  up -d    # basic + a seeded nine-inning game.
 ```
 
 ```
-docker compose --profile demo  up -d    # reserved: needs the game domain
 docker compose --profile vision up -d   # reserved: GPU worker + camera ingest
 docker compose --profile sim   up -d    # reserved: Godot headless simulator
 ```
 
-`basic` is implemented and boots from `docker-compose.yml`. The other three profiles are reserved
-names documented in [ADR 0005](docs/adr/0005-deployment-profiles.md), not commands that work yet.
+`basic` boots from `docker-compose.yml`. `demo` adds a one-shot `seed` service that waits for the
+API to be healthy and appends a reproducible nine-inning game, so the box score and standings are
+already populated on first boot; a second run detects the seeded game and appends nothing.
+`vision` and `sim` remain reserved names documented in
+[ADR 0005](docs/adr/0005-deployment-profiles.md), not commands that work yet.
 The build context is the parent directory (the API consumes `olb-contract` as a `file:`
 dependency), which is why the workspace ignore file is copied one level up.
 
