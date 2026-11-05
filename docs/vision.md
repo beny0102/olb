@@ -3,6 +3,7 @@
 **Document status:** draft v0.1 · 2026-10-31
 **Scope:** architecture, data contract, and delivery plan. No implementation yet.
 **Audience:** contributors, reviewers, and anyone evaluating whether this project is technically serious.
+**Implementation snapshot:** the first verified deploy slice is in the [D4 case study](case-study.md).
 
 ---
 

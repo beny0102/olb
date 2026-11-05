@@ -2,7 +2,7 @@
 
 **Open-source scorekeeping, league management and game-day visualization for leagues that don't have a Hawk-Eye budget.**
 
-> **Status: pre-alpha.** This repository holds design documents only. There is no runnable code yet, no release, and no pilot league. Everything below is a stated intention, not a delivered feature — see the [roadmap](#roadmap).
+> **Status: pre-alpha.** This repository holds design documents only. There is no runnable code yet, no release, and no pilot league. Everything below is a stated intention, not a delivered feature — see the [roadmap](#roadmap). The first working deploy slice, with its verification table and limits, is documented in the [D4 case study](docs/case-study.md).
 
 ---
 

@@ -16,10 +16,21 @@ olb-api/*.log
 olb-web/node_modules
 olb-web/.next
 olb-web/out
+olb-web/.env
 olb-web/.env.local
 olb-web/*.log
 olb-web/next-env.d.ts
 olb-web/*.tsbuildinfo
+olb-scorer/node_modules
+olb-scorer/.next
+olb-scorer/out
+olb-scorer/.env
+olb-scorer/.env.local
+olb-scorer/*.log
+olb-scorer/next-env.d.ts
+olb-scorer/*.tsbuildinfo
+olb-api/deploy/.env
+olb-api/deploy/backups
 olb-contract/node_modules
 olb-contract/.venv
 olb-contract/.pytest_cache
@@ -27,4 +38,5 @@ olb-contract/__pycache__
 olb-whitepaper/.git
 olb-api/.git
 olb-web/.git
+olb-scorer/.git
 olb-contract/.git
