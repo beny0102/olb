@@ -165,11 +165,14 @@ This is the core of the project. Everything else is replaceable.
 
 | Type | Meaning |
 | --- | --- |
-| `game.start` / `game.end` | Lifecycle, umpires, weather, field condition |
-| `lineup.set` / `substitution` | Batting order, defensive positions, pitching changes |
+| `game.start` / `game.end` | Lifecycle, umpires, weather, field condition, rules profile |
+| `game.suspend` / `game.resume` | Temporary interruption and continuation |
+| `lineup.set` / `substitution` | Batting order, defensive positions, pitching changes, courtesy and re-entry |
 | `pitch` | One pitch: call, count, optional telemetry reference |
 | `ball_in_play` | Batted-ball outcome and fielders involved |
-| `runner` | Stolen base, caught stealing, pickoff, advance on error |
+| `runner` | Stolen base, caught stealing, pickoff, advance on error, placed extra-inning runner |
+| `interference` | Batter awarded first base by catcher's interference or obstruction |
+| `ejection` | Audit record that a person left the game; does not change state |
 | `inning.end` | Outs reached, runs scored, side retired |
 | `discrepancy` | A machine/human conflict awaiting review (7.2) |
 | `amendment` | Post-game correction with a reason |
@@ -197,6 +200,7 @@ This is the core of the project. Everything else is replaceable.
 | `C` | Called strike | `T` | Foul tip |
 | `F` | Foul | `X` | In play |
 | `P` | Pitchout | `Q` | Swinging on pitchout |
+| `H` | Hit by pitch | `I` | Intentional ball |
 
 Pickoff throws (`1`–`9`) and runner-going markers (`>`) are represented as `runner` events instead, to keep the pitch event atomic. The full code table lives in `olb-contract`, not in this document, so there is exactly one authority.
 
@@ -362,7 +366,7 @@ The phrase "hybrid engine" is meaningless without a rule for who wins. The rule 
 | Pitch call (ball/called strike/swinging strike/foul/in play) | **Human** | Flag discrepancy for review |
 | Pitch speed, release point, plate location, break | **Machine** | Human may override with an amendment |
 | Batted-ball trajectory | **Machine** | Human never enters it |
-| Game lifecycle (start, end, forfeit) | **Human** | Never proposes |
+| Game lifecycle (start, suspend, resume, end, forfeit) | **Human** | Never proposes |
 
 Operational rules:
 
