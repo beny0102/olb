@@ -2,7 +2,7 @@
 
 **Open-source scorekeeping, league management and game-day visualization for leagues that don't have a Hawk-Eye budget.**
 
-> **Status: pre-alpha.** This repository holds design documents only. There is no runnable code yet, no release, and no pilot league. Everything below is a stated intention, not a delivered feature — see the [roadmap](#roadmap). The first working deploy slice, with its verification table and limits, is documented in the [D4 case study](docs/case-study.md).
+> **Status: D4 + tier 1.** The D4 deploy slice runs the API, viewer and scorer with seeded league data, and tier 1 adds admin setup, catalog and roster management, the scorer's game lifecycle and `deploy/up.sh`; there is still no release and no pilot league. The verification table and limits are in the [D4 case study](docs/case-study.md) — see the [roadmap](#roadmap) for what remains.
 
 ---
 
