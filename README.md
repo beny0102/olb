@@ -2,7 +2,7 @@
 
 **Open-source scorekeeping, league management and game-day visualization for leagues that don't have a Hawk-Eye budget.**
 
-> **Status: D4 + tier 1.** The D4 deploy slice runs the API, viewer and scorer with seeded league data, and tier 1 adds admin setup, catalog and roster management, the scorer's game lifecycle and `deploy/up.sh`; there is still no release and no pilot league. The verification table and limits are in the [D4 case study](docs/case-study.md) — see the [roadmap](#roadmap) for what remains.
+> **Status: D4 + tier 1 + score merge.** The D4 deploy slice runs the API, viewer and scorer with seeded league data, and tier 1 adds admin setup, catalog and roster management, the scorer's game lifecycle and `deploy/up.sh`. The score merge moves the offline scorer into the web app at `/score` and retires the separate process; `up.sh` runs the API and web as plain processes, with optional HTTPS behind Tailscale Serve. There is still no release and no pilot league. The verification tables and limits are in the [D4 case study](docs/case-study.md) and the [score-merge case study](docs/case-study-score-merge.md) — see the [roadmap](#roadmap) for what remains.
 
 ---
 
@@ -70,12 +70,15 @@ The project is a set of independent repositories joined by a published contract,
 | [`olb`](https://github.com/beny0102/olb) | Whitepaper, ADRs, compose profiles, acceptance suite | Docs, Docker |
 | [`olb-contract`](https://github.com/beny0102/olb-contract) | Canonical schema, codegen, conformance fixtures | JSON Schema → TS + Python |
 | [`olb-api`](https://github.com/beny0102/olb-api) | League ERP, game state machine, realtime gateway | NestJS, Postgres, Redis |
-| [`olb-web`](https://github.com/beny0102/olb-web) | Public viewer and league pages | Next.js, React Three Fiber |
-| `olb-scorer` | Scorekeeper PWA, offline-first | Next.js, IndexedDB |
+| [`olb-web`](https://github.com/beny0102/olb-web) | Public viewer, league pages, admin console and scorer at `/score` | Next.js, React Three Fiber |
+| `olb-scorer` | Retired: legacy draft export only; scoring lives in `olb-web` `/score` | Next.js, IndexedDB |
 | `olb-vision` | Calibration CLI and pitch tracking | Python, OpenCV, YOLO |
 | `olb-sim` | Synthetic games with ground truth | Godot 4 headless |
 
-`olb`, `olb-contract` (v0.1.0), `olb-api` (v0.1.0, pre-alpha) and `olb-web` (v0.1.0, pre-alpha) exist today. The rest are created as Phase 0 work; links go live as each repository is published.
+`olb`, `olb-contract` (0.2.0), `olb-api` (pre-alpha), `olb-web` (pre-alpha) and
+`olb-scorer` (retired, tag `v0.1.0-legacy`) exist today. `olb-sim` and
+`olb-vision` are Phase 0 scaffolds; links go live as each repository is
+published.
 
 ## What works without cameras
 
@@ -137,6 +140,10 @@ dependency), which is why the workspace ignore file is copied one level up.
 | **4 · Multi-camera** | Time sync, triangulation, batted-ball flight, player tracking | Research phase; no date committed |
 
 Each phase must leave the previous one working. There is no "big rewrite" slot in this plan.
+
+**Current position:** phase 1 is implemented through tier 1 and the score merge.
+A seeded game can be scored offline in `/score`, synced to the API and followed
+in the viewer, but no pilot league has exercised it in production.
 
 > **Deviation on record:** the compatibility surface (contract, API, viewer, portal) was built
 > before the league ERP. The order actually followed, and why, is [ADR 0003](docs/adr/0003-build-order.md).
