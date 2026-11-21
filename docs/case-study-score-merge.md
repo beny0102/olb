@@ -55,11 +55,11 @@ parallel first attempt read the contract's `dist/` while it was being rebuilt.
 | Web | `cd olb-web && npm run typecheck && npm test && npm run build` | 404 passed; typecheck and build clean |
 | Scorer legacy | `cd olb-scorer && npm run typecheck && npm test && npm run build` | 211 passed; typecheck and build clean |
 | Database backup | `BACKUP_CONTAINER=olb-postgres ./deploy/backup.sh` | dump published, 60 KB |
+| GitHub Actions | workflow runs on `3b22993`, `7d93905`, `b1e1f5c` | all successful |
 
 The 10 skipped API tests are the Postgres integration and migration suites that
-require an explicit integration database. GitHub Actions starts on `main` after
-the push; the run was not inspected from this host, so this document does not
-claim a green CI result.
+require an explicit integration database. The documentation commits that follow
+the merge trigger separate runs; they do not change code.
 
 ## 4. Cutover
 
@@ -80,8 +80,8 @@ window. There is no pilot league and no known device with production drafts.
   `SecurityFatalError` recommending an upgrade and only continues after a retry.
   The advisory is unresolved in this snapshot; both web and legacy scorer are
   affected.
-- **No CI evidence yet.** The merge was verified locally; the post-merge GitHub
-  Actions run was not read back from this host.
+- **No CI for the retired scorer.** API, web and contract run in GitHub Actions;
+  `olb-scorer` has no workflow, so its green suite is local evidence only.
 - **One API replica.** SSE remains in-process; the deploy package runs a single
   API process.
 - **No WebSocket transport.** The viewer still polls, and SSE is a one-way
