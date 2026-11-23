@@ -24,6 +24,10 @@ release. Realtime is SSE plus polling under
 
 ## Before the pilot
 
+For a synthetic dry run on a disposable database, follow
+[`pilot-fictional.md`](pilot-fictional.md). It uses the seeded fictional league
+and never real player or guardian data.
+
 1. Take a database backup with
    `BACKUP_CONTAINER=olb-postgres ./deploy/backup.sh` and restore it into a
    throwaway database with `./deploy/restore.sh <dump> --db olb_restore_test`.
