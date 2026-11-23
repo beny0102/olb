@@ -76,16 +76,22 @@ window. There is no pilot league and no known device with production drafts.
 
 ## 5. Known limits
 
-- **Next.js security advisory.** The pinned Next.js 16.4.3 build prints a
-  `SecurityFatalError` recommending an upgrade and only continues after a retry.
-  The advisory is unresolved in this snapshot; both web and legacy scorer are
-  affected.
+- **Resolved Next.js advisory.** Web and the retired scorer moved from 16.4.3
+  to 16.4.6; `next build` no longer prints `SecurityFatalError`.
 - **No CI for the retired scorer.** API, web and contract run in GitHub Actions;
   `olb-scorer` has no workflow, so its green suite is local evidence only.
 - **One API replica.** SSE remains in-process; the deploy package runs a single
-  API process.
-- **No WebSocket transport.** The viewer still polls, and SSE is a one-way
-  replacement for the contract's snapshot + delta.
+  API process. Accepted for Phase 1 in
+  [ADR 0010](adr/0010-realtime-transport-phase-1.md).
+- **No WebSocket transport.** The viewer keeps polling as a fallback, and SSE is
+  a one-way replacement for the contract's snapshot + delta. Accepted for Phase 1
+  in ADR 0010.
+- **Privacy baseline only.** Public rosters and stats hide full names until an
+  organization admin records a guardian consent; there is no self-service
+  player portal, automated retention or erasure workflow yet.
+- **In-process login throttle.** Five failed attempts per IP and email, thirty
+  per IP, in a fifteen-minute window. A second API replica needs a shared
+  limiter.
 - **No real pitch tracks.** The viewer draws synthetic trajectories until
   `olb-vision` ships.
 - **Legacy drafts are manual.** A device that cannot run tag `v0.1.0-legacy`

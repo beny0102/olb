@@ -69,7 +69,7 @@ The project is a set of independent repositories joined by a published contract,
 | --- | --- | --- |
 | [`olb`](https://github.com/beny0102/olb) | Whitepaper, ADRs, compose profiles, acceptance suite | Docs, Docker |
 | [`olb-contract`](https://github.com/beny0102/olb-contract) | Canonical schema, codegen, conformance fixtures | JSON Schema → TS + Python |
-| [`olb-api`](https://github.com/beny0102/olb-api) | League ERP, game state machine, realtime gateway | NestJS, Postgres, Redis |
+| [`olb-api`](https://github.com/beny0102/olb-api) | League ERP, game state machine, SSE gateway | NestJS, Postgres (Redis deferred) |
 | [`olb-web`](https://github.com/beny0102/olb-web) | Public viewer, league pages, admin console and scorer at `/score` | Next.js, React Three Fiber |
 | `olb-scorer` | Retired: legacy draft export only; scoring lives in `olb-web` `/score` | Next.js, IndexedDB |
 | `olb-vision` | Calibration CLI and pitch tracking | Python, OpenCV, YOLO |
@@ -86,12 +86,16 @@ published.
 | --- | :---: | :---: | :---: |
 | Seasons, teams, rosters, eligibility | ✅ | ✅ | ✅ |
 | Live play-by-play from a phone | ✅ | ✅ | ✅ |
-| Box score, standings, season stats | ✅ | ✅ | ✅ |
-| 3D field with animated plays | — | ✅ | ✅ |
+| Line score, standings, season stats | ✅ | ✅ | ✅ |
+| Per-player box score | — | planned | planned |
+| 3D pitch view (synthetic trajectory) | — | ✅ | measured |
+| 3D field with animated plays | — | planned | planned |
 | Pitch location, speed, break | — | seeded | measured |
-| Multi-camera 3D trajectory | — | seeded | planned |
+| Multi-camera 3D trajectory | — | — | planned |
 
-`demo` is the portfolio path: a seeded league with a pre-recorded game looping in the viewer, so anyone can evaluate the project with one command and no data entry.
+`demo` is the portfolio path: a seeded league with a reproducible nine-inning
+game and a synthetic pitch view, so anyone can evaluate the project with one
+command and no data entry. It does not animate full fielding plays yet.
 
 ## What this is not
 
@@ -141,9 +145,12 @@ dependency), which is why the workspace ignore file is copied one level up.
 
 Each phase must leave the previous one working. There is no "big rewrite" slot in this plan.
 
-**Current position:** phase 1 is implemented through tier 1 and the score merge.
-A seeded game can be scored offline in `/score`, synced to the API and followed
-in the viewer, but no pilot league has exercised it in production.
+**Current position:** phase 1 is implemented through tier 1, the score merge and
+the privacy baseline. A seeded game can be scored offline in `/score`, synced to
+the API and followed in the viewer, but no pilot league has exercised it in
+production. Realtime is SSE plus polling (ADR 0010), and the viewer has a 3D
+pitch view, not a full 3D field with animated plays. The supervised pilot
+checklist is [docs/release-phase-1.md](docs/release-phase-1.md).
 
 > **Deviation on record:** the compatibility surface (contract, API, viewer, portal) was built
 > before the league ERP. The order actually followed, and why, is [ADR 0003](docs/adr/0003-build-order.md).
@@ -173,6 +180,11 @@ The target audience includes youth leagues, which means the default configuratio
 - No facial recognition, no biometric templates, no identity inference.
 - Consent records are part of the data model, not a policy document.
 
+The Phase 1 baseline implements hidden-by-default names, a per-player guardian
+consent record, admin grant/revoke and public fallback to jersey number or
+position. Video retention, self-service consent and the erasure workflow are
+still specified but not implemented.
+
 See [docs/vision.md §10](docs/vision.md#10-privacy-and-minors).
 
 ## Contributing
@@ -182,7 +194,9 @@ Design-only phase, so the most useful contribution right now is **review of the 
 - License: [Apache-2.0](LICENSE), no open-core, no CLA.
 - Sign-off required ([DCO](https://developercertificate.org/)), not a contributor agreement.
 - Conventional Commits; ADRs for decisions that are hard to reverse.
-- Documentation and code in English; the product UI ships in Spanish first, with i18n from day one.
+- Documentation and code in English; the product UI ships in Spanish first.
+  String extraction and a second locale are not implemented yet; the hardcoded
+  Spanish copy is a known Phase 1 limit, not a shipped i18n system.
 
 ## Acknowledgements
 

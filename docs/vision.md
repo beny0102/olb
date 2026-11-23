@@ -112,7 +112,7 @@ flowchart LR
 | --- | --- | --- | --- |
 | API | NestJS (TypeScript) | Django, FastAPI | Shared types with the frontend via the contract; teams already know TS |
 | DB | PostgreSQL 16 + JSONB | MongoDB, TimescaleDB | Relational integrity for league data; JSONB for telemetry payloads; Timescale only if volume demands it |
-| Realtime | WebSocket gateway + Redis Streams | Socket.IO, raw MQTT to clients | Explicit envelope, snapshot/delta semantics, no vendor client lock-in |
+| Realtime | SSE snapshot/state + polling fallback (Phase 1); WebSocket gateway + Redis Streams deferred | Socket.IO, raw MQTT to clients | Explicit envelope, snapshot/delta semantics, no vendor client lock-in; see ADR 0010 |
 | Jobs | BullMQ (Redis) | Kafka, RabbitMQ | One datastore for queue and fan-out at this scale |
 | Vision | Python, OpenCV, Ultralytics YOLO, custom triangulation | Full CV framework, cloud inference | The hard part is calibration and math, not the detector |
 | Simulator | Godot 4 headless | Blender scripting | Real-time deterministic physics, scriptable export, runs headless |
@@ -483,13 +483,19 @@ The target audience includes youth leagues. Children's data is not an edge case 
 - **Jurisdiction notes**: GDPR (EU/UK), COPPA (US, under 13), LFPDPPP (Mexico), LGPD (Brazil). The defaults are chosen to satisfy the strictest common denominator rather than being configured per country.
 - **Breach response**: a written procedure, because "we would figure it out" is not a procedure.
 
+**Phase 1 implementation status:** public names are hidden by default, an
+organization admin records a guardian consent per player, revocation hides the
+name again, and public rosters and stats fall back to jersey number or position.
+Video retention, self-service consent, access logging and the erasure workflow
+remain specified but unbuilt.
+
 ## 11. Deployment and hardware
 
 ### 11.1 Compose profiles
 
 | Profile | Services | Target machine |
 | --- | --- | --- |
-| `basic` | API, Postgres, Redis, web | Any laptop, 2 vCPU / 2 GB |
+| `basic` | API, Postgres, web | Any laptop, 2 vCPU / 2 GB |
 | `demo` | `basic` + seeded league + looping game | Same, used for evaluation |
 | `vision` | `basic` + GPU worker + camera ingest | Mini-PC with a discrete GPU |
 | `sim` | `basic` + Godot headless | Development machine |
@@ -530,14 +536,14 @@ A volunteer league administrator is not a sysadmin. Therefore: a documented sing
 
 ### 11.6 Hosted frontend (optional)
 
-The web app can additionally be deployed to Cloudflare Workers, which is how the public demo is published. This is a hosting option for the frontend only: the API, Postgres, Redis and the realtime gateway remain self-hosted, because Workers cannot provide a stateful WebSocket gateway or PostgreSQL. The demo build runs with no backend at all, replaying a recorded event log client-side. See [ADR 0001](adr/0001-cloudflare-deployment.md).
+The web app can additionally be deployed to Cloudflare Workers, which is how the public demo is published. This is a hosting option for the frontend only: the API and Postgres remain self-hosted, and any future realtime gateway needs a stateful host. The demo build runs with no backend at all, replaying a recorded event log client-side. See [ADR 0001](adr/0001-cloudflare-deployment.md).
 
 ## 12. Roadmap and exit criteria
 
 | Phase | Work | Exit criterion | Est. |
 | --- | --- | --- | --- |
 | **0 · Foundations** | Contract v1 + codegen (TS/Python) in `olb-contract`, seven repositories scaffolded, compose profiles, CI, ADRs 0001–0007 | One schema source compiles to both languages; CI green; `basic` profile boots | 2 wk |
-| **1 · Scorekeeping** | ERP, scorer PWA (offline-first), state machine + fold tests, WS gateway, 2.5D viewer, demo seed | A seeded 9-inning game is scored end to end from a phone, synced offline, and followed live by a second device | 6–8 wk |
+| **1 · Scorekeeping** | ERP, scorer PWA (offline-first), state machine + fold tests, SSE gateway + polling fallback, 2.5D viewer, demo seed | A seeded 9-inning game is scored end to end from a phone, synced offline, and followed live by a second device | 6–8 wk |
 | **2 · Simulation + 3D** | Godot headless sim with ground truth, R3F viewer, replay, clips | A synthetic game renders with true 3D trajectories, reproducible from a seed | 4 wk |
 | **3 · Pitch vision** | Calibration CLI, single/dual camera pitch tracking, proposal inbox | Plate location within a published tolerance on a physical field; calibration reproducible by a second person from docs alone | 8–12 wk |
 | **4 · Multi-camera** | PTP sync, triangulation at scale, batted-ball flight, player tracking | Research phase, no date committed | — |
@@ -587,11 +593,13 @@ Architecture Decision Records in `docs/adr/`, one per irreversible or expensive-
 | [0001](adr/0001-cloudflare-deployment.md) | Frontend deployment target (Cloudflare Workers via OpenNext) | Accepted |
 | [0002](adr/0002-repository-topology.md) | Repository topology: polyrepo with a published contract | Accepted |
 | [0003](adr/0003-build-order.md) | Build order: vertical slice before the full league ERP | Accepted |
-| 0004 | Canonical data contract and versioning | Accepted |
-| 0005 | Deployment profiles and support matrix | Accepted |
-| 0006 | Licensing and contribution model (Apache-2.0 + DCO) | Accepted |
-| 0007 | Realtime transport and envelope | Planned |
-| 0008 | Capture abstraction and human-in-the-loop authority | Planned |
+| [0004](adr/0004-data-contract.md) | Canonical data contract and versioning | Accepted |
+| [0005](adr/0005-deployment-profiles.md) | Deployment profiles and support matrix | Accepted |
+| [0006](adr/0006-licensing.md) | Licensing and contribution model (Apache-2.0 + DCO) | Accepted |
+| [0007](adr/0007-client-event-ids-and-revisions.md) | Client event IDs and revisions | Accepted |
+| [0008](adr/0008-event-0-2-additive-scoring.md) | Event contract 0.2 additive scoring | Accepted |
+| [0009](adr/0009-consolidate-scorer-into-web.md) | Consolidate the scorekeeper into the web app | Accepted |
+| [0010](adr/0010-realtime-transport-phase-1.md) | Phase 1 realtime transport: SSE and polling | Accepted |
 
 ### 15.2 Contract compatibility
 
