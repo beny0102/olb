@@ -152,7 +152,9 @@ production. Realtime is SSE plus polling: one API replica by default, or Redis
 Pub/Sub fan-out and shared login counters behind a Caddy gateway for a
 multi-replica deployment (ADR 0010, ADR 0011). The viewer has a 3D pitch view,
 not a full 3D field with animated plays. The supervised pilot checklist is
-[docs/release-phase-1.md](docs/release-phase-1.md).
+[docs/release-phase-1.md](docs/release-phase-1.md); the 2026-11-23 synthetic run
+and its P-01 to P-12 evidence are in
+[docs/pilot-run-2026-11-23.md](docs/pilot-run-2026-11-23.md).
 
 > **Deviation on record:** the compatibility surface (contract, API, viewer, portal) was built
 > before the league ERP. The order actually followed, and why, is [ADR 0003](docs/adr/0003-build-order.md).

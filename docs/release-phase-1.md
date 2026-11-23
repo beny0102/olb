@@ -88,3 +88,7 @@ The release candidate is accepted when the commands above pass on the pilot
 host, the backup drill restores the expected row counts, the privacy smoke shows
 `#jersey` before consent and the full name only while consent is active, and the
 pilot league signs off on the rollback procedure.
+
+The synthetic run on 2026-11-23 passed P-01 to P-11 and the backup/restore half
+of P-12; the code rollback rehearsal and a real-league sign-off remain open. See
+[`pilot-run-2026-11-23.md`](pilot-run-2026-11-23.md).

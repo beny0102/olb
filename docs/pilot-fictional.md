@@ -3,6 +3,10 @@
 **Tipo:** simulacro de mesa con datos sintéticos. No es un piloto de liga real,
 no sustituye una prueba de carga y no crea consentimientos legales.
 
+**Ejecución:** el guion se ejecutó el 2026-11-23 sobre `olb_pilot_auto`. Resultado
+y evidencia en [pilot-run-2026-11-23.md](pilot-run-2026-11-23.md): P-01 a P-11
+pasan; P-12 queda parcial porque no se ensayó el rollback de código.
+
 El objetivo es recorrer el criterio de salida de Fase 1 sin depender de una liga:
 un juego de nueve entradas anotado desde el teléfono, sincronizado desde el
 navegador offline y seguido en un segundo dispositivo. Todos los equipos,
@@ -48,23 +52,12 @@ cd olb-api && ./deploy/down.sh
 docker exec olb-postgres dropdb -U postgres olb_pilot
 ```
 
-## Ensayo automatizado ya verificado
+## Ejecución completada
 
-El 2026-11-23 se ejecutó el subconjunto de infraestructura sobre una base
-desechable:
-
-- el stack sembró 8 juegos de liga; 6 quedaron programados y el juego
-  `0192f3d0-0000-7000-8000-000000000201` quedó disponible como Tiburones visita
-  a Faros;
-- la plantilla pública mostró `#2`; el administrador vio el nombre completo;
-  el consentimiento sintético lo publicó y la revocación volvió a `#2`;
-- `/`, `/score`, `/stats` y `/games/<id>` respondieron 200;
-- el backup de 44K restauró 16 tablas con 9 juegos, 72 jugadores, 208 eventos y
-  3 migraciones.
-
-Eso cubre P-01 a P-04 y la restauración de backup de P-12. **No** cubre el
-rollback de código, la anotación manual, el modo offline, la segunda pantalla,
-la enmienda ni el bundle; esos criterios siguen siendo el trabajo del piloto.
+El 2026-11-23 se ejecutó el guion completo sobre una base desechable, con un
+teléfono Android y una segunda pantalla. El informe con los IDs, eventos,
+hashes y reservas está en [pilot-run-2026-11-23.md](pilot-run-2026-11-23.md).
+Los criterios P-01 a P-11 pasan; P-12 queda parcial por el rollback de código.
 
 ## Guion
 
@@ -164,6 +157,8 @@ Guardar en una carpeta fuera del repositorio:
 
 - El consentimiento sintético no tiene validez legal ni debe copiarse a producción.
 - No se prueban cámaras, video, ni trayectorias reales.
-- Una sola réplica de API: SSE y el throttle de login viven en proceso.
+- Una sola réplica de API en este guion: SSE y el throttle de login viven en
+  proceso. El paquete escalado tiene su propio smoke; repetir el piloto contra
+  dos réplicas queda pendiente.
 - El objetivo es functional y operativo; carga, latencia multi-dispositivo y
   seguridad de red se prueban aparte.
