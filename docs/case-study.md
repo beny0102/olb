@@ -217,18 +217,19 @@ that has not been restored is unverified.
 
 ## 7. Known limits
 
-- **Single-instance SSE.** The event stream is in-process. Two API replicas
-  would not fan out to each other without Redis pub/sub or Postgres
-  `LISTEN/NOTIFY`. The deploy package runs one API replica.
-- **No admin UI.** Catalog writes exist as scoped API endpoints; operators use
-  `curl` or the API, not a web form.
+- **Realtime fan-out is optional.** The basic package runs one API replica
+  with in-process SSE. The scaled package adds Redis Pub/Sub and a gateway for
+  two replicas (ADR 0011); there is still no durable replay or Redis Streams.
+- **No self-service privacy.** Organization admins can record and revoke
+  public-name consent, and erasure is an admin `force` delete; there is no
+  player-facing consent or erasure flow.
 - **No webhooks.** There is no outbound event subscription, no integration
   with a league website and no notification channel.
 - **No player box beyond leaders.** The box score is team-level runs, hits,
   errors and linescore. Batting and pitching leaders are season aggregates from
   full games; there is no per-player game box score and no fielding statistics.
-- **No multi-instance realtime and no queue.** The scorer syncs idempotently but
-  the stack does not include a message broker.
+- **No durable queue.** The scorer syncs idempotently, but the stack does not
+  include BullMQ or a background job system.
 - **Demo identities are not production identities.** The seed creates known
   passwords for local evaluation; replace them before any non-local use.
 - **Vision and simulation remain reserved.** The `vision` and `sim` profiles

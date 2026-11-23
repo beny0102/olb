@@ -18,9 +18,11 @@ for legacy draft export only.
 | Database | Postgres 16 with migrations through `003_player_privacy` |
 | Deployment docs | `olb-api/README.md`, `olb-api/deploy/` |
 
-Redis, BullMQ, WebSocket and a separate scorer process are not part of this
-release. Realtime is SSE plus polling under
-[ADR 0010](adr/0010-realtime-transport-phase-1.md).
+The basic package does not require Redis, BullMQ, WebSocket or a separate
+scorer process. Realtime is SSE plus polling under
+[ADR 0010](adr/0010-realtime-transport-phase-1.md); an optional multi-replica
+package adds Redis Pub/Sub behind a gateway under
+[ADR 0011](adr/0011-multi-replica-redis.md).
 
 ## Before the pilot
 
@@ -72,7 +74,8 @@ back the database does, so it is a last resort and needs the league's consent.
 
 ## Known limits
 
-- One API replica. SSE and the login throttle are in-process.
+- The basic package runs one API replica; SSE and the login throttle are
+  in-process. The scaled package is tested locally but has not been piloted.
 - No video, no real pitch tracks, no full-field animated plays.
 - Per-player box score and self-service privacy controls are not built.
 - Spanish copy is hardcoded; there is no second locale.

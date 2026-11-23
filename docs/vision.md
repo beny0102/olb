@@ -112,8 +112,8 @@ flowchart LR
 | --- | --- | --- | --- |
 | API | NestJS (TypeScript) | Django, FastAPI | Shared types with the frontend via the contract; teams already know TS |
 | DB | PostgreSQL 16 + JSONB | MongoDB, TimescaleDB | Relational integrity for league data; JSONB for telemetry payloads; Timescale only if volume demands it |
-| Realtime | SSE snapshot/state + polling fallback (Phase 1); WebSocket gateway + Redis Streams deferred | Socket.IO, raw MQTT to clients | Explicit envelope, snapshot/delta semantics, no vendor client lock-in; see ADR 0010 |
-| Jobs | BullMQ (Redis) | Kafka, RabbitMQ | One datastore for queue and fan-out at this scale |
+| Realtime | SSE snapshot/state + polling fallback; Redis Pub/Sub fan-out for multi-replica deployments (ADR 0011); WebSocket + Redis Streams deferred | Socket.IO, raw MQTT to clients | Explicit envelope, snapshot/delta semantics, no vendor client lock-in; see ADR 0010 and ADR 0011 |
+| Jobs | Scripts and in-process work in Phase 1; BullMQ (Redis) deferred | Kafka, RabbitMQ | One datastore for queue and fan-out at this scale |
 | Vision | Python, OpenCV, Ultralytics YOLO, custom triangulation | Full CV framework, cloud inference | The hard part is calibration and math, not the detector |
 | Simulator | Godot 4 headless | Blender scripting | Real-time deterministic physics, scriptable export, runs headless |
 | Viewer | Next.js + React Three Fiber | Unity WebGL, Babylon.js | Web-native, component model, small team velocity |
@@ -600,6 +600,7 @@ Architecture Decision Records in `docs/adr/`, one per irreversible or expensive-
 | [0008](adr/0008-event-0-2-additive-scoring.md) | Event contract 0.2 additive scoring | Accepted |
 | [0009](adr/0009-consolidate-scorer-into-web.md) | Consolidate the scorekeeper into the web app | Accepted |
 | [0010](adr/0010-realtime-transport-phase-1.md) | Phase 1 realtime transport: SSE and polling | Accepted |
+| [0011](adr/0011-multi-replica-redis.md) | Multi-replica API with Redis Pub/Sub and a Caddy gateway | Accepted |
 
 ### 15.2 Contract compatibility
 

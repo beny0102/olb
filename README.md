@@ -69,7 +69,7 @@ The project is a set of independent repositories joined by a published contract,
 | --- | --- | --- |
 | [`olb`](https://github.com/beny0102/olb) | Whitepaper, ADRs, compose profiles, acceptance suite | Docs, Docker |
 | [`olb-contract`](https://github.com/beny0102/olb-contract) | Canonical schema, codegen, conformance fixtures | JSON Schema → TS + Python |
-| [`olb-api`](https://github.com/beny0102/olb-api) | League ERP, game state machine, SSE gateway | NestJS, Postgres (Redis deferred) |
+| [`olb-api`](https://github.com/beny0102/olb-api) | League ERP, game state machine, SSE gateway | NestJS, Postgres; optional Redis for multi-replica (ADR 0011) |
 | [`olb-web`](https://github.com/beny0102/olb-web) | Public viewer, league pages, admin console and scorer at `/score` | Next.js, React Three Fiber |
 | `olb-scorer` | Retired: legacy draft export only; scoring lives in `olb-web` `/score` | Next.js, IndexedDB |
 | `olb-vision` | Calibration CLI and pitch tracking | Python, OpenCV, YOLO |
@@ -148,9 +148,11 @@ Each phase must leave the previous one working. There is no "big rewrite" slot i
 **Current position:** phase 1 is implemented through tier 1, the score merge and
 the privacy baseline. A seeded game can be scored offline in `/score`, synced to
 the API and followed in the viewer, but no pilot league has exercised it in
-production. Realtime is SSE plus polling (ADR 0010), and the viewer has a 3D
-pitch view, not a full 3D field with animated plays. The supervised pilot
-checklist is [docs/release-phase-1.md](docs/release-phase-1.md).
+production. Realtime is SSE plus polling: one API replica by default, or Redis
+Pub/Sub fan-out and shared login counters behind a Caddy gateway for a
+multi-replica deployment (ADR 0010, ADR 0011). The viewer has a 3D pitch view,
+not a full 3D field with animated plays. The supervised pilot checklist is
+[docs/release-phase-1.md](docs/release-phase-1.md).
 
 > **Deviation on record:** the compatibility surface (contract, API, viewer, portal) was built
 > before the league ERP. The order actually followed, and why, is [ADR 0003](docs/adr/0003-build-order.md).
