@@ -41,8 +41,10 @@ and never real player or guardian data.
    `CORS_ORIGIN` to the public web origin.
 5. Confirm the public roster shows jersey numbers or positions, not names, for
    every player without a guardian consent.
-6. Record the pilot's guardian consents in the admin console. Granting or
-   revoking a name is an audit event in `player_consents`, not a policy note.
+6. Confirm the league has participant/guardian approval, then record the pilot's
+   guardian consents in the admin console. Granting or revoking a name is an
+   audit event in `player_consents`, not a policy note; the platform does not
+   verify the approval itself.
 7. Confirm at least two phones can score offline and sync the same game, and
    that a second device follows the game in the viewer.
 
@@ -77,8 +79,10 @@ back the database does, so it is a last resort and needs the league's consent.
 - The basic package runs one API replica; SSE and the login throttle are
   in-process. The scaled package is tested locally but has not been piloted.
 - No video, no real pitch tracks, no full-field animated plays.
-- Per-player box score and self-service privacy controls are not built.
-- Spanish copy is hardcoded; there is no second locale.
+- Self-service privacy controls and video retention are not built.
+- The per-player box score covers league games with a roster; it has no fielding
+  line and no player history.
+- Spanish copy is hardcoded; there is no second locale (BL-07).
 - Legacy drafts from a device that cannot run `v0.1.0-legacy` must be re-entered
   or finished before cutover.
 

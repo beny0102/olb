@@ -486,8 +486,10 @@ The target audience includes youth leagues. Children's data is not an edge case 
 **Phase 1 implementation status:** public names are hidden by default, an
 organization admin records a guardian consent per player, revocation hides the
 name again, and public rosters and stats fall back to jersey number or position.
-Video retention, self-service consent, access logging and the erasure workflow
-remain specified but unbuilt.
+The league is responsible for obtaining participant and guardian approval before
+that record is created; the platform does not verify the approval itself. Video
+retention, self-service consent, access logging and the erasure workflow remain
+specified but unbuilt.
 
 ## 11. Deployment and hardware
 

@@ -87,7 +87,7 @@ published.
 | Seasons, teams, rosters, eligibility | ✅ | ✅ | ✅ |
 | Live play-by-play from a phone | ✅ | ✅ | ✅ |
 | Line score, standings, season stats | ✅ | ✅ | ✅ |
-| Per-player box score | — | planned | planned |
+| Per-player box score | ✅ (league games) | — (demo has no league roster) | ✅ (league games) |
 | 3D pitch view (synthetic trajectory) | — | ✅ | measured |
 | 3D field with animated plays | — | planned | planned |
 | Pitch location, speed, break | — | seeded | measured |
@@ -145,13 +145,14 @@ dependency), which is why the workspace ignore file is copied one level up.
 
 Each phase must leave the previous one working. There is no "big rewrite" slot in this plan.
 
-**Current position:** phase 1 is implemented through tier 1, the score merge and
-the privacy baseline. A seeded game can be scored offline in `/score`, synced to
-the API and followed in the viewer, but no pilot league has exercised it in
-production. Realtime is SSE plus polling: one API replica by default, or Redis
-Pub/Sub fan-out and shared login counters behind a Caddy gateway for a
-multi-replica deployment (ADR 0010, ADR 0011). The viewer has a 3D pitch view,
-not a full 3D field with animated plays. The supervised pilot checklist is
+**Current position:** phase 1 is implemented through tier 1, the score merge,
+the privacy baseline and the per-player box score for league games. A seeded
+game can be scored offline in `/score`, synced to the API and followed in the
+viewer, but no pilot league has exercised it in production. Realtime is SSE plus
+polling: one API replica by default, or Redis Pub/Sub fan-out and shared login
+counters behind a Caddy gateway for a multi-replica deployment (ADR 0010, ADR
+0011). The viewer has a 3D pitch view, not a full 3D field with animated plays.
+The supervised pilot checklist is
 [docs/release-phase-1.md](docs/release-phase-1.md); the 2026-11-23 synthetic run
 and its P-01 to P-12 evidence are in
 [docs/pilot-run-2026-11-23.md](docs/pilot-run-2026-11-23.md).
@@ -186,8 +187,11 @@ The target audience includes youth leagues, which means the default configuratio
 
 The Phase 1 baseline implements hidden-by-default names, a per-player guardian
 consent record, admin grant/revoke and public fallback to jersey number or
-position. Video retention, self-service consent and the erasure workflow are
-still specified but not implemented.
+position. Leagues are responsible for obtaining participant and guardian
+approval before an admin records that consent; the platform stores the record,
+enforces the default and hides the name again on revocation. Video retention,
+self-service consent and the erasure workflow are still specified but not
+implemented.
 
 See [docs/vision.md §10](docs/vision.md#10-privacy-and-minors).
 
@@ -199,8 +203,9 @@ Design-only phase, so the most useful contribution right now is **review of the 
 - Sign-off required ([DCO](https://developercertificate.org/)), not a contributor agreement.
 - Conventional Commits; ADRs for decisions that are hard to reverse.
 - Documentation and code in English; the product UI ships in Spanish first.
-  String extraction and a second locale are not implemented yet; the hardcoded
-  Spanish copy is a known Phase 1 limit, not a shipped i18n system.
+  String extraction and a second locale are the next product priority after the
+  per-player box score (BL-07); the hardcoded Spanish copy is a known Phase 1
+  limit, not a shipped i18n system.
 
 ## Acknowledgements
 

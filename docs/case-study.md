@@ -225,9 +225,11 @@ that has not been restored is unverified.
   player-facing consent or erasure flow.
 - **No webhooks.** There is no outbound event subscription, no integration
   with a league website and no notification channel.
-- **No player box beyond leaders.** The box score is team-level runs, hits,
-  errors and linescore. Batting and pitching leaders are season aggregates from
-  full games; there is no per-player game box score and no fielding statistics.
+- **No fielding box or player history.** The game box score includes batting
+  and pitching lines for league games with a roster, plus the team line score;
+  it has no fielding statistics and no player career page. The seeded `demo`
+  game has no league roster, so its player tables stay empty rather than showing
+  invented identities.
 - **No durable queue.** The scorer syncs idempotently, but the stack does not
   include BullMQ or a background job system.
 - **Demo identities are not production identities.** The seed creates known
